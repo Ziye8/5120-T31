@@ -4,14 +4,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Menu, X, Home as HomeIcon, Car, Users, MapPin, TrendingUp } from 'lucide-react';
 import { ArrowLeft } from 'lucide-react';
 
-// 新的数据接口定义（适配后端返回格式）
+// New API data interface (adapted to backend return format)
 interface ApiCarData {
   state: string;
   yearRange: string;
   value: number;
 }
 
-// 默认数据（保持结构一致，用于API不可用时）
+// Default data (same structure, used when API is unavailable)
 const defaultCarData: ApiCarData[] = [
   {"state":"NSW","yearRange":"2016-2017","value":262872},
   {"state":"Vic.","yearRange":"2016-2017","value":209495},
@@ -33,7 +33,7 @@ const defaultCarData: ApiCarData[] = [
   {"state":"Aust.","yearRange":"2017-2018","value":796970}
 ];
 
-// 图表数据格式
+// Chart data format
 interface ChartData {
   year: string;
   value: number;
@@ -57,7 +57,7 @@ const CarOwnershipData: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string>('');
   const [stateData, setStateData] = useState<Record<string, ApiCarData[]>>({});
 
-  // 处理年份范围排序的工具函数
+  // Utility function to sort by year range
   const sortByYearRange = (data: ApiCarData[]) => {
     return [...data].sort((a, b) => {
       const yearA = parseInt(a.yearRange.split('-')[0]);
@@ -66,7 +66,7 @@ const CarOwnershipData: React.FC = () => {
     });
   };
 
-  // 加载数据
+  // Load data from API or fallback to default data
   useEffect(() => {
     const fetchCarData = async () => {
       try {
@@ -76,7 +76,7 @@ const CarOwnershipData: React.FC = () => {
         let carDataFromAPI: ApiCarData[] = [];
         if (apiResponse.ok) {
           const rawData: any[][] = await apiResponse.json();
-          // 转换后端返回的二维数组为我们定义的接口格式
+          // Convert backend 2D array into defined interface format
           carDataFromAPI = rawData.map(item => ({
             state: item[0],
             yearRange: item[1],
@@ -84,10 +84,9 @@ const CarOwnershipData: React.FC = () => {
           }));
         }
 
-        // 处理数据
         const apiData = carDataFromAPI.length ? carDataFromAPI : defaultCarData;
 
-        // 按州分组
+        // Group data by state
         const groupedByState = apiData.reduce((acc, item) => {
           if (!acc[item.state]) {
             acc[item.state] = [];
@@ -96,14 +95,13 @@ const CarOwnershipData: React.FC = () => {
           return acc;
         }, {} as Record<string, ApiCarData[]>);
 
-        // 获取所有州并排序
+        // Get all states and sort
         const allStates = Object.keys(groupedByState).sort();
 
-        // 设置状态数据
         setStateData(groupedByState);
         setStates(allStates);
 
-        // 设置默认选中的州
+        // Set default selected state
         const defaultState = allStates.length > 0 ? allStates[0] : '';
         setSelectedState(defaultState);
 
@@ -111,7 +109,7 @@ const CarOwnershipData: React.FC = () => {
         setError("API unavailable. Showing default data.");
         console.error("Error fetching car data:", err);
 
-        // 使用默认数据
+        // Use default data when API fails
         const groupedByState = defaultCarData.reduce((acc, item) => {
           if (!acc[item.state]) {
             acc[item.state] = [];
@@ -134,22 +132,21 @@ const CarOwnershipData: React.FC = () => {
     fetchCarData();
   }, []);
 
-  // 当选中的州变化时，更新图表和统计数据
+  // Update chart and statistics when selected state changes
   useEffect(() => {
     if (!selectedState || !stateData[selectedState] || loading) return;
 
-    // 获取并排序选中州的数据
     const filteredData = sortByYearRange(stateData[selectedState]);
     setCarData(filteredData);
 
-    // 转换为图表需要的数据格式
+    // Transform data for chart
     const transformedData: ChartData[] = filteredData.map(item => ({
       year: item.yearRange,
       value: item.value
     }));
     setChartData(transformedData);
 
-    // 计算统计数据
+    // Calculate statistics
     if (filteredData.length > 0) {
       const firstItem = filteredData[0];
       const lastItem = filteredData[filteredData.length - 1];
@@ -158,13 +155,11 @@ const CarOwnershipData: React.FC = () => {
           ? ((totalGrowth / firstItem.value) * 100).toFixed(1)
           : '0';
 
-      // 找到峰值年份
       const peakItem = filteredData.reduce((prev, current) =>
           prev.value > current.value ? prev : current
       );
 
-      // 计算平均年增长率
-      const periodCount = filteredData.length - 1; // 期间数量 = 数据点数量 - 1
+      const periodCount = filteredData.length - 1;
       const avgGrowth = periodCount > 0
           ? Math.round(totalGrowth / periodCount)
           : 0;
@@ -177,7 +172,7 @@ const CarOwnershipData: React.FC = () => {
         avgGrowth
       });
 
-      // 生成关键洞察
+      // Generate key insights
       const insights: string[] = [];
 
       if (totalGrowth > 0) {
@@ -199,7 +194,7 @@ const CarOwnershipData: React.FC = () => {
 
   return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        {/* 导航栏 */}
+        {/* Navbar */}
         <header className="sticky top-0 z-10 backdrop-blur-md bg-white/80 border-b border-gray-100 py-4 px-6 shadow-sm">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="flex items-center">
@@ -225,7 +220,7 @@ const CarOwnershipData: React.FC = () => {
           </div>
         </header>
 
-        {/* 导航菜单 */}
+        {/* Navigation Menu */}
         {isMenuOpen && (
             <div className="fixed inset-0 z-50 overflow-hidden">
               <div
@@ -304,14 +299,14 @@ const CarOwnershipData: React.FC = () => {
             </div>
         )}
 
-        {/* 主内容区 */}
+        {/* Main Content */}
         <main className="max-w-6xl mx-auto py-10 px-6">
-          {/* 页面标题和描述 */}
+          {/* Page Title and Description */}
           <div className="mb-10">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Car Ownership Data</h1>
             <p className="text-gray-600">Number of cars registered by state from 2016-2021</p>
 
-            {/* 州选择器 */}
+            {/* State Selector */}
             {states.length > 0 && (
                 <div className="mt-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select State</label>
@@ -328,7 +323,7 @@ const CarOwnershipData: React.FC = () => {
             )}
           </div>
 
-          {/* 图表区域 */}
+          {/* Chart Section */}
           <section className="mb-12">
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Car Registration Statistics</h2>
@@ -380,10 +375,10 @@ const CarOwnershipData: React.FC = () => {
             </div>
           </section>
 
-          {/* 统计卡片 */}
+          {/* Statistics Cards */}
           <section className="mb-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* 总增长 */}
+              {/* Total Growth */}
               <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Total Growth</h3>
                 <p className="text-sm text-gray-600 mb-4">Across all periods</p>
@@ -397,7 +392,7 @@ const CarOwnershipData: React.FC = () => {
                 </div>
               </div>
 
-              {/* 峰值时期 */}
+              {/* Peak Period */}
               <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Peak Period</h3>
                 <p className="text-sm text-gray-600 mb-4">Highest registration</p>
@@ -407,7 +402,7 @@ const CarOwnershipData: React.FC = () => {
                 </div>
               </div>
 
-              {/* 平均增长 */}
+              {/* Average Growth */}
               <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Average Growth</h3>
                 <p className="text-sm text-gray-600 mb-4">Per period</p>
@@ -421,7 +416,7 @@ const CarOwnershipData: React.FC = () => {
             </div>
           </section>
 
-          {/* 关键洞察 */}
+          {/* Key Insights */}
           <section>
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Key Insights</h2>
