@@ -5,6 +5,7 @@ from typing import List, Dict
 from database import query_all, query_one
 import logging
 from datetime import datetime, timedelta
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="FastAPI Database Example")
 
@@ -12,13 +13,19 @@ app = FastAPI(title="FastAPI Database Example")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Configure CORS
+
+origins = [
+    "http://54.227.183.166:3000",
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allowed frontend origin
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all HTTP headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
