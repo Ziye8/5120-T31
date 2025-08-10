@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 # Database configuration
 DB_CONFIG: Dict[str, Any] = {
-    "host": "parking-db.cmpgwg4ekzvl.us-east-1.rds.amazonaws.com",
+    "host": "ta31.cmpwgw4ekzvl.us-east-1.rds.amazonaws.com",
     "user": "admin",
-    "password": "Wa5b!cC)I4*~p-N:6h-nTM886lI",
-    "database": "parking-db",
+    "password": "12345678",
+    "database": "park",
     "port": 3306,
 }
 

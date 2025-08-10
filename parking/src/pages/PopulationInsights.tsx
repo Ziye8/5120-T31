@@ -5,7 +5,7 @@ import { Menu, X, Home as HomeIcon, Car, Users, MapPin, TrendingUp, ArrowLeft, I
 
 // Mock data for population growth (2020-2024)
 const populationData = [
-  { year: '2020', population: 178000 },
+  { year: '2020', population: 189000 },
   { year: '2021', population: 165000 },
   { year: '2022', population: 182000 },
   { year: '2023', population: 195000 },
@@ -16,7 +16,7 @@ const populationData = [
 const keyStats = [
   { 
     title: "2020 Population", 
-    value: "178,000", 
+    value: "189,000", 
     trend: "-2.5% decline", 
     trendColor: "text-red-500" 
   },

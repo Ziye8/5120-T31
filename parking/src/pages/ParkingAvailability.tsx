@@ -347,9 +347,6 @@ const ParkingAvailability: React.FC = () => {
                         <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium">
                           View Details
                         </button>
-                        <button className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                          Get Directions
-                        </button>
                       </div>
                     </div>
                     
