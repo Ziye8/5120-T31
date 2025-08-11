@@ -1,21 +1,21 @@
-# netlify.toml  
 [build]
-  base    = "parking"                               
-  command = "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm run build"
-  publish = "dist/static"                           # Vite 的输出目录
+  # monorepo 情况：让 Netlify 进入 parking 再执行构建
+  base    = "parking"
+  command = "npm ci && npm run build"   # 如果你坚持 pnpm：改成 "pnpm install && pnpm build"
+  publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "20"
-  VITE_API_BASE = "http://54.227.183.166:8000/api" 
+  NODE_VERSION = "18"
 
-# SPA 刷新路由不 404
+# 代理 /api/* 到你的后端，避免浏览器跨域
+[[redirects]]
+  from = "/api/*"
+  to   = "http://54.227.183.166/api/:splat"
+  status = 200
+  force  = true
+
+# SPA 回退
 [[redirects]]
   from = "/*"
   to   = "/index.html"
   status = 200
-
-# 静态资源缓存（可选）
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
