@@ -18,6 +18,7 @@ origins = [
     "http://54.227.183.166:3000",
     "http://localhost:3000",
     "http://localhost:5173",
+    "https://parkingcarzmel.netlify.app",
 ]
 
 app.add_middleware(
