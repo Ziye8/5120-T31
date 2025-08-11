@@ -1,12 +1,12 @@
-# netlify.toml  —— 放在仓库根目录
+# netlify.toml  
 [build]
-  base    = "parking"                               # 子目录
+  base    = "parking"                               
   command = "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm run build"
   publish = "dist/static"                           # Vite 的输出目录
 
 [build.environment]
   NODE_VERSION = "20"
-  VITE_API_BASE = "http://54.227.183.166:8000/api"  # 你的后端地址
+  VITE_API_BASE = "http://54.227.183.166:8000/api" 
 
 # SPA 刷新路由不 404
 [[redirects]]
