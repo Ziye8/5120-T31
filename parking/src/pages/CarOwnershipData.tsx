@@ -71,7 +71,7 @@ const CarOwnershipData: React.FC = () => {
     const fetchCarData = async () => {
       try {
         setLoading(true);
-        const apiResponse = await fetch('http://127.0.0.1:8000/api/car');
+        const apiResponse = await fetch('http://54.227.183.166:8000/api/car');
 
         let carDataFromAPI: ApiCarData[] = [];
         if (apiResponse.ok) {

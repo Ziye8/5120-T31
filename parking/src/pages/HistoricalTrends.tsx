@@ -70,7 +70,7 @@ const HistoricalTrends: React.FC = () => {
             setLoadingLocations(true);
             try {
                 // Call backend to get parking locations list
-                const response = await fetch('http://127.0.0.1:8000/api/park');
+                const response = await fetch('http://54.227.183.166:8000/api/park');
 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -147,7 +147,7 @@ const HistoricalTrends: React.FC = () => {
             params.append('locationId', locationId);                     // Parking zone id
 
             // Call backend historical data API
-            const response = await fetch(`http://127.0.0.1:8000/api/history?${params.toString()}`);
+            const response = await fetch(`http://54.227.183.166:8000/api/history?${params.toString()}`);
 
             if (!response.ok) {
                 throw new Error(`Failed to fetch historical data, status code: ${response.status}`);
